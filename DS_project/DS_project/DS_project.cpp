@@ -1,7 +1,9 @@
+#include "pch.h"
 #include <iostream>
 #include<vector>
 #include<list>
 #include<queue>
+
 using namespace std;
 
 class edge
@@ -98,21 +100,50 @@ public:
 			}
 		}
 	}
+	int Degree_Centrality_oneNode(int node) {
+		return nodes[node].edg_count;
+	}
+	void Degree_Centrality_all() {
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			cout << "node[" << i << "]" << "  ->  " << "Degree_Centrality= " << nodes[i].edg_count << endl;
+		}
+	}
+	float Closeness_centrality_oneNode(int root,int node_number) {
+		
+		int sum_shortest_dis=0;
+		
+		vector<int> distance(node_number);
+		vector<int> parent(node_number);
+		dijkstra(root, distance, parent);
+		for (int i = 0; i < node_number; i++)
+		{
+			sum_shortest_dis += distance[i];
+		}
+		//cout << "sum_shortest_dis= " << sum_shortest_dis<<endl;
+		return (float)(node_number - 1) /sum_shortest_dis;
+	}
+	void Closeness_centrality_all(int node_number) {
+		for(int i = 0; i < nodes.size(); i++) {
+		 cout<< "node[" << i << "]" << "  ->  "<<" Closeness_centrality= " << Closeness_centrality_oneNode(i, node_number)<<endl;		
+		}
+	}
 };
 int main()
 {
-	int V = 5;
+	int V = 4;
 	graph g(V);
 	vector<int> distance(V);
 	vector<int> parent(V);
 	g.add_edge(0, 1, 1);
+	g.add_edge(0, 3, 5);
+	g.add_edge(0, 2, 10);
 	g.add_edge(1, 3, 1);
-	g.add_edge(0, 2, 1);
-	g.add_edge(2, 3, 1);
-	g.add_edge(2, 4, 3);
-	g.add_edge(3, 4, 1);
+	g.add_edge(2, 3, 4);
 	g.printList();
 	g.dijkstra(0,distance,parent);
 	for(int i=0; i < V; i++)
 		cout<<distance[i]<<"\t"<<parent[i]<<endl;
+	g.Degree_Centrality_all();
+	g.Closeness_centrality_all(V);
 }
