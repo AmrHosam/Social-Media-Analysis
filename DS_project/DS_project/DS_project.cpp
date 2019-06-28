@@ -128,6 +128,21 @@ public:
 		 cout<< "node[" << i << "]" << "  ->  "<<" Closeness_centrality= " << Closeness_centrality_oneNode(i, node_number)<<endl;		
 		}
 	}
+	void closeness_centrality(vector<float> &centrality)
+	{
+		int vertices_no = nodes.size();
+		vector<int> distance(vertices_no);
+		vector<int> parent(vertices_no);
+		int sum = 0;
+		for(int i=0 ; i < vertices_no; i++)
+		{
+			dijkstra(i,distance,parent);
+			for(int j=0; j < vertices_no; j++)
+				sum += distance[j];
+			centrality[i] = (vertices_no-1) / (float)sum;
+			sum = 0;
+		}
+	}
 };
 int main()
 {
