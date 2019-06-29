@@ -3,6 +3,7 @@
 #include<vector>
 #include<list>
 #include<queue>
+#include<stack>
 
 using namespace std;
 
@@ -143,22 +144,127 @@ public:
 			sum = 0;
 		}
 	}
+	void modified_DFS(int src, int dest, vector< vector<int> > &parent, vector<int> &paths_no, vector<double> &centrallity)
+	{
+		stack<int> to_bo_visited;
+		for(int i = 0 ; i < parent[dest].size(); i++)
+			to_bo_visited.push(parent[dest][i]);
+			while(!to_bo_visited.empty())
+			{
+				int x = to_bo_visited.top();
+				to_bo_visited.pop();
+				if(x != src)
+				{
+					centrallity[x] += paths_no[x]/(double)paths_no[dest];
+					for(int i = 0 ; i < parent[x].size(); i++)
+						to_bo_visited.push(parent[x][i]);
+				}
+			}
+	}
+	void modified_dijkstra(int src, vector<int> &dist, vector< vector<int> > &parent, vector<double> &centrallity)
+	{
+		priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > PQ;
+		vector<int> paths_no(dist.size(),0);
+		for(int i = 0; i < dist.size(); i++)
+		{
+			dist[i] = INT32_MAX;
+			if(parent[i].size() != 1)
+				parent[i].resize(1);
+			parent[i][0] = -1;
+			if(i != src)
+				PQ.push(make_pair(INT32_MAX,i));
+		}
+		dist[src] = 0;
+		paths_no[src] = 1;
+		PQ.push(make_pair(0,src));
+		while(!PQ.empty())
+		{
+			pair<int,int> mini;
+			mini = PQ.top();
+			int mini_n = mini.second;
+			int mini_w = mini.first;
+			PQ.pop();
+			if(mini_w > dist[mini_n])
+				continue;
+			if(mini_n > src)
+			{
+				// if(src == 1 && mini_n == 2)
+				// {
+				// 	for(int i = 0 ; i < parent.size(); i++)
+				// 	{
+				// 		for(int j = 0; j < parent[i].size(); j++)
+				// 		{
+				// 			cout<<parent[i][j]<<"\t";
+				// 		}
+				// 		cout<<"\n";
+				// 	}
+				// }
+				// else
+					modified_DFS(src,mini_n,parent,paths_no,centrallity);
+				//cout<<mini_n<<"\n";
+			}
+			list<edge>::iterator it;
+			for(it = nodes[mini_n].node_list.begin(); it != nodes[mini_n].node_list.end(); it++)
+			{
+				int w = it->getWeight();
+				int n = it->getDestination();
+				if(dist[n] > dist[mini_n] + w)
+				{
+					paths_no[n] = paths_no[mini_n];
+					dist[n] = dist[mini_n] + w;
+					parent[n][0] = mini_n;
+					PQ.push(make_pair(dist[n], n));
+				}
+				else if(dist[n] == dist[mini_n] + w)
+				{
+					paths_no[n] += paths_no[mini_n];
+					parent[n].push_back(mini_n);
+				}
+			}
+		}
+		// for(int i=0; i < paths_no.size(); i++)
+		// 	cout<<paths_no[i]<<"\t";
+		// cout<<"\n";
+	}
 };
 int main()
 {
-	int V = 4;
+	int V ,n;
+	// int x,y,z;
+	// cin>>V>>n;
 	graph g(V);
+	vector<double> centrallity(V,0);
 	vector<int> distance(V);
 	vector<int> parent(V);
+	vector< vector<int> > prev(V,vector<int> (1));
+	// for(int i=0 ; i < n;i++)
+	// {
+	// 	cin>>x>>y>>z;
+	// 	g.add_edge(x, y, z);
+	// }
 	g.add_edge(0, 1, 1);
-	g.add_edge(0, 3, 5);
-	g.add_edge(0, 2, 10);
+	g.add_edge(0, 2, 1);
 	g.add_edge(1, 3, 1);
-	g.add_edge(2, 3, 4);
+	g.add_edge(2, 3, 1);
+	g.add_edge(2, 4, 3);
+	g.add_edge(3, 4, 1);
 	g.printList();
 	g.dijkstra(0,distance,parent);
 	for(int i=0; i < V; i++)
 		cout<<distance[i]<<"\t"<<parent[i]<<endl;
 	g.Degree_Centrality_all();
 	g.Closeness_centrality_all(V);
+	for(int i = 0 ; i < V; i++)
+		g.modified_dijkstra(i,distance,prev,centrallity);
+	for(int i = 0; i < V; i++)
+		cout<<centrallity[i]<<"\n";
+	for(int i = 0 ; i < prev.size(); i++)
+	{
+		for(int j = 0; j < prev[i].size(); j++)
+		{
+			cout<<prev[i][j]<<"\t";
+		}
+		cout<<"\n";
+	}
+	
 }
