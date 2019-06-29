@@ -3,4 +3,9 @@ c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_pr
 c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(71): warning C4018: '<': signed/unsigned mismatch
 c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(107): warning C4018: '<': signed/unsigned mismatch
 c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(127): warning C4018: '<': signed/unsigned mismatch
+c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(134): warning C4018: '<': signed/unsigned mismatch
+c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(139): warning C4018: '<': signed/unsigned mismatch
+c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(180): warning C4018: '<': signed/unsigned mismatch
+c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(195): warning C4018: '<': signed/unsigned mismatch
+c:\users\omar\documents\github\social-media-analysis\ds_project\ds_project\ds_project.cpp(197): warning C4018: '<': signed/unsigned mismatch
   DS_project.vcxproj -> C:\Users\omar\Documents\GitHub\Social-Media-Analysis\DS_project\Debug\DS_project.exe
