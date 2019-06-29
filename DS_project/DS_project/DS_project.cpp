@@ -4,7 +4,7 @@
 #include<list>
 #include<queue>
 #include<stack>
-
+#include <iomanip>
 using namespace std;
 
 class edge
@@ -66,13 +66,12 @@ public:
 		}
 		cout << endl;
 	}
-	void dijkstra(int src, vector<int> &dist, vector<int> &parent)
+	void dijkstra(int src, vector<int> &dist)
 	{
 		priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > PQ;
 		for(int i = 0; i < dist.size(); i++)
 		{
 			dist[i] = INT32_MAX;//infinty intial lel src
-			parent[i] = -1;//how to know the root has parent -1
 			if(i != src)//law m4 el src 7ot el periorty queue b infity brdo 
 				PQ.push(make_pair(INT32_MAX,i));
 		}
@@ -95,7 +94,6 @@ public:
 				if(dist[n] > dist[mini_n] + w)
 				{
 					dist[n] = dist[mini_n] + w;
-					parent[n] = mini_n;
 					PQ.push(make_pair(dist[n], n));
 				}
 			}
@@ -107,7 +105,7 @@ public:
 	void Degree_Centrality_all() {
 		for (int i = 0; i < nodes.size(); i++)
 		{
-			cout << "node[" << i << "]" << "  ->  " << "Degree_Centrality= " << nodes[i].edg_count << endl;
+			cout<<nodes[i].edg_count<<"\n";
 		}
 	}
 	float Closeness_centrality_oneNode(int root,int node_number) {
@@ -115,8 +113,7 @@ public:
 		int sum_shortest_dis=0;
 		
 		vector<int> distance(node_number);
-		vector<int> parent(node_number);
-		dijkstra(root, distance, parent);
+		dijkstra(root, distance);
 		for (int i = 0; i < node_number; i++)
 		{
 			sum_shortest_dis += distance[i];
@@ -211,18 +208,17 @@ public:
 			}
 		}
 	}
-	void closeness_centrality(vector<float> &centrality)
+	void closeness_centrality(vector<double> &centrality)
 	{
 		int vertices_no = nodes.size();
 		vector<int> distance(vertices_no);
-		vector<int> parent(vertices_no);
 		int sum = 0;
 		for(int i=0 ; i < vertices_no; i++)
 		{
-			dijkstra(i,distance,parent);
+			dijkstra(i,distance);
 			for(int j=0; j < vertices_no; j++)
 				sum += distance[j];
-			centrality[i] = (vertices_no-1) / (float)sum;
+			centrality[i] = (vertices_no-1) / (double)sum;
 			sum = 0;
 		}
 	}
@@ -269,22 +265,7 @@ public:
 			if(mini_w > dist[mini_n])
 				continue;
 			if(mini_n > src)
-			{
-				// if(src == 1 && mini_n == 2)
-				// {
-				// 	for(int i = 0 ; i < parent.size(); i++)
-				// 	{
-				// 		for(int j = 0; j < parent[i].size(); j++)
-				// 		{
-				// 			cout<<parent[i][j]<<"\t";
-				// 		}
-				// 		cout<<"\n";
-				// 	}
-				// }
-				// else
-					modified_DFS(src,mini_n,parent,paths_no,centrallity);
-				//cout<<mini_n<<"\n";
-			}
+				modified_DFS(src,mini_n,parent,paths_no,centrallity);
 			list<edge>::iterator it;
 			for(it = nodes[mini_n].node_list.begin(); it != nodes[mini_n].node_list.end(); it++)
 			{
@@ -292,6 +273,8 @@ public:
 				int n = it->getDestination();
 				if(dist[n] > dist[mini_n] + w)
 				{
+					if(parent[n].size() != 1)
+						parent[n].resize(1);
 					paths_no[n] = paths_no[mini_n];
 					dist[n] = dist[mini_n] + w;
 					parent[n][0] = mini_n;
@@ -304,51 +287,39 @@ public:
 				}
 			}
 		}
-		// for(int i=0; i < paths_no.size(); i++)
-		// 	cout<<paths_no[i]<<"\t";
-		// cout<<"\n";
 	}
 };
 int main()
 {
 	int V=5 ,n;
-	// int x,y,z;
-	// cin>>V>>n;
+	int x,y,z;
+	cin>>V>>n;
 	graph g(V);
-	vector<double> centrallity(V,0);
-	vector<int> distance(V);
-	vector<int> parent(V);
-	vector< vector<int> > prev(V,vector<int> (1));
-	// for(int i=0 ; i < n;i++)
-	// {
-	// 	cin>>x>>y>>z;
-	// 	g.add_edge(x, y, z);
-	// }
-	g.add_edge(0, 1, 1);
-	g.add_edge(0, 2, 1);
-	g.add_edge(1, 3, 1);
-	g.add_edge(2, 3, 1);
-	g.add_edge(2, 4, 3);
-	g.add_edge(3, 4, 1);
-	g.printList();
-	g.dijkstra(0,distance,parent);
-	for(int i=0; i < V; i++)
-		cout<<distance[i]<<"\t"<<parent[i]<<endl;
-	g.Degree_Centrality_all();
-	g.Closeness_centrality_all(V);
-	for(int i = 0 ; i < V; i++)
-		g.modified_dijkstra(i,distance,prev,centrallity);
-	for(int i = 0; i < V; i++)
-		cout<<centrallity[i]<<"\n";
-	for(int i = 0 ; i < prev.size(); i++)
+	for(int i=0 ; i < n;i++)
 	{
-		for(int j = 0; j < prev[i].size(); j++)
-		{
-			cout<<prev[i][j]<<"\t";
-		}
-		cout<<"\n";
+		cin>>x>>y>>z;
+		g.add_edge(x, y, z);
 	}
-	
-	
-//g.improve_dijkstra(0, distance, parent, muparent);
+
+
+	//digree centrality
+	//g.Degree_Centrality_all();
+
+
+
+	//Closeness Centrality
+	// vector<double> centrallity(V,0);
+	// g.closeness_centrality(centrallity);
+	// for(int i=0; i < centrallity.size(); i++)
+	// 	cout<<setprecision(12)<<centrallity[i]<<"\n";
+
+
+
+	// vector<double> centrallity(V,0);
+	// vector<int> distance(V);
+	// vector< vector<int> > prev(V,vector<int> (1));
+	// for(int i = 0 ; i < V; i++)
+	// 	g.modified_dijkstra(i,distance,prev,centrallity);
+	// for(int i = 0; i < V; i++)
+	// 	cout<<setprecision(12)<<centrallity[i]<<"\n";
 }
