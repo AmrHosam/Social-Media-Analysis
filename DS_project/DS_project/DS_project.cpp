@@ -130,6 +130,7 @@ public:
 	}
 	void improve_dijkstra(int src, vector<int> &dist, vector<int> &parent,vector<vector<int>> &multiparent)
 	{
+		vector<int> path_no(parent.size(),0);
 		int flagcount = 0;
 		for (int i = 0; i < multiparent.size(); i++)
 		{
@@ -144,6 +145,7 @@ public:
 				PQ.push(make_pair(INT32_MAX, i));
 		}
 		dist[src] = 0; //dis from root to root 
+		path_no[src] = 1;
 		PQ.push(make_pair(0, src));//7atna brdo el src fel pq 
 		while (!PQ.empty())
 		{
@@ -161,12 +163,14 @@ public:
 				int n = it->getDestination();
 				if (dist[n] > dist[mini_n] + w)
 				{
+					path_no[n] = path_no[mini_n];
 					dist[n] = dist[mini_n] + w;
 					parent[n] = mini_n;
 					PQ.push(make_pair(dist[n], n));
 				}
 				else if (dist[n] == dist[mini_n] + w)
 				{
+					path_no[n] = path_no[mini_n]+1;
 					if (multiparent[n].front() == -1)
 					{
 						multiparent[n].front() = mini_n;
