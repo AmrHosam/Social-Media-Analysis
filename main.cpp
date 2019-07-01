@@ -4,6 +4,7 @@
 #include<queue>
 #include<stack>
 #include <iomanip>
+#include<fstream>
 using namespace std;
 
 class edge
@@ -288,29 +289,53 @@ public:
 		}
 	}
 };
+void generate_outfile(vector<double> &centrallity)
+{
+	ofstream outfile;
+	outfile.open("output.txt", ios::out | ios::trunc );
+	for(int i=0; i < centrallity.size(); i++)
+		outfile<<setprecision(12)<<centrallity[i]<<"\n";
+	outfile.close();
+}
+void visualize()
+{
+	system("python3 graph.py");
+}
 int main()
 {
 	int V ,n;
 	int x,y,z;
-	cin>>V>>n;
+	//reading from files
+	ifstream infile;
+	infile.open("input.txt");
+	infile>>V>>n;
 	graph g(V);
-	for(int i=0 ; i < n;i++)
+	for(int i=0 ; i < n; i++)
 	{
-		cin>>x>>y>>z;
-		g.add_edge(x, y, z);
+		infile>>x>>y>>z;
+		g.add_edge(x,y,z);
 	}
 
+	//reading by cin
+	// cin>>V>>n;
+	// graph g(V);
+	// for(int i=0 ; i < n;i++)
+	// {
+	// 	cin>>x>>y>>z;
+	// 	g.add_edge(x, y, z);
+	// }
 
-	//digree centrality
+
+	//degree centrality
 	//g.Degree_Centrality_all();
 
 
 
 	//Closeness Centrality
-	// vector<double> centrallity(V,0);
-	// g.closeness_centrality(centrallity);
-	// for(int i=0; i < centrallity.size(); i++)
-	// 	cout<<setprecision(12)<<centrallity[i]<<"\n";
+	vector<double> centrallity(V,0);
+	g.closeness_centrality(centrallity);
+	for(int i=0; i < centrallity.size(); i++)
+		cout<<setprecision(12)<<centrallity[i]<<"\n";
 
 
 	//Betweenness Centrallity
@@ -321,4 +346,6 @@ int main()
 	// 	g.modified_dijkstra(i,distance,prev,centrallity);
 	// for(int i = 0; i < V; i++)
 	// 	cout<<setprecision(12)<<centrallity[i]<<"\n";
+	generate_outfile(centrallity);
+	visualize();
 }
