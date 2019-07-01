@@ -1,4 +1,3 @@
-#include "pch.h"
 #include <iostream>
 #include<vector>
 #include<list>
@@ -291,7 +290,7 @@ public:
 };
 int main()
 {
-	int V=5 ,n;
+	int V ,n;
 	int x,y,z;
 	cin>>V>>n;
 	graph g(V);
@@ -314,7 +313,7 @@ int main()
 	// 	cout<<setprecision(12)<<centrallity[i]<<"\n";
 
 
-
+	//Betweenness Centrallity
 	// vector<double> centrallity(V,0);
 	// vector<int> distance(V);
 	// vector< vector<int> > prev(V,vector<int> (1));
